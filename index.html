@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Angry Bird! 🐦 From Your Friend</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a18cd1, #fbc2eb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Unboxing Page (Gift Box) --- */
+        #unboxing-page {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease, visibility 1s ease;
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+        }
+
+        #unboxing-page.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        h1.main-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 7vw, 4.5rem);
+            color: white;
+            text-shadow: 2px 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .gift-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .gift-box {
+            width: 100%;
+            height: 100%;
+            background: #ff4757;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .gift-ribbon-vertical {
+            position: absolute;
+            width: 25px;
+            height: 100%;
+            background: #f1f2f6;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .gift-ribbon-horizontal {
+            position: absolute;
+            height: 25px;
+            width: 100%;
+            background: #f1f2f6;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .gift-lid {
+            width: 110%;
+            height: 35px;
+            background: #ff6b81;
+            position: absolute;
+            top: -15px;
+            left: -5%;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1), opacity 1s;
+            z-index: 2;
+        }
+
+        .tap-text {
+            color: white;
+            margin-top: 30px;
+            font-size: 1.1rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+
+        /* --- Main Content Area (Glassmorphism Note) --- */
+        #birthday-content {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+            z-index: 10;
+            position: relative;
+        }
+
+        #birthday-content.active {
+            display: flex;
+            animation: fadeIn 2s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 20;
+        }
+
+        .wishes-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            color: #d81b60;
+            margin-bottom: 20px;
+        }
+
+        /* Shayari Styling */
+        .shayari-box {
+            background: rgba(255, 255, 255, 0.3);
+            border-left: 4px solid #ff4757;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 4px 12px 12px 4px;
+            font-style: italic;
+        }
+
+        .shayari-line {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .unique-wish {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        /* --- Continuous CSS Animations --- */
+        #animation-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+        }
+
+        /* 3D Flapping Butterfly */
+        .css-butterfly {
+            position: absolute;
+            width: 40px; height: 40px;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .css-butterfly .wing {
+            position: absolute;
+            width: 22px; height: 32px;
+            border-radius: 50% 50% 20% 50%;
+            opacity: 0.85;
+            box-shadow: inset 0 0 8px rgba(255,255,255,0.6), 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .css-butterfly .wing-left {
+            transform-origin: right center;
+            left: -4px;
+            animation: flap-l 0.12s ease-in-out infinite alternate;
+        }
+
+        .css-butterfly .wing-right {
+            transform-origin: left center;
+            left: 18px;
+            border-radius: 50% 50% 50% 20%;
+            animation: flap-r 0.12s ease-in-out infinite alternate;
+        }
+
+        @keyframes flap-l { from { transform: rotateY(0deg); } to { transform: rotateY(75deg); } }
+        @keyframes flap-r { from { transform: rotateY(0deg); } to { transform: rotateY(-75deg); } }
+
+        /* Blooming Flower */
+        .css-flower {
+            position: absolute;
+            width: 50px; height: 50px;
+            transform: scale(0);
+            animation: bloom 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            will-change: transform, opacity;
+        }
+
+        .css-flower .petal {
+            position: absolute;
+            width: 14px; height: 24px;
+            border-radius: 50%;
+            top: 50%; left: 50%;
+            transform-origin: top center;
+            box-shadow: inset 0 0 5px rgba(255,255,255,0.3);
+        }
+        
+        .css-flower .center {
+            position: absolute;
+            width: 14px; height: 14px;
+            background: #ffda79;
+            border-radius: 50%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        @keyframes bloom {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            100% { transform: scale(1) rotate(360deg); opacity: 0.85; }
+        }
+
+        @media (max-width: 600px) {
+            .glass-card { padding: 30px 20px; }
+            .wishes-title { font-size: 2rem; }
+            .shayari-line { font-size: 1.05rem; }
+            .unique-wish { font-size: 0.95rem; }
+            .gift-container { width: 140px; height: 140px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="unboxing-page">
+        <h1 class="main-title">A Surprise For My Angry Bird... 🐦</h1>
+        <div class="gift-container" onclick="openGift()">
+            <div class="gift-lid" id="lid"></div>
+            <div class="gift-box">
+                <div class="gift-ribbon-vertical"></div>
+                <div class="gift-ribbon-horizontal"></div>
+            </div>
+        </div>
+        <p class="tap-text">Tap the box to open your surprise!</p>
+    </div>
+
+    <div id="animation-layer"></div>
+
+    <div id="birthday-content">
+        <div class="glass-card">
+            <h2 class="wishes-title">Happy Birthday, Angry Bird! 🌸</h2>
+            
+            <div class="shayari-box">
+                <p class="shayari-line">नाराज़गी तुम्हारी चेहरे पर बड़ी प्यारी लगती है,</p>
+                <p class="shayari-line">गुस्से में तुम और भी न्यारी लगती हो।</p>
+                <p class="shayari-line">मुस्कुरा दिया करो कभी अपनी इस नादान दोस्त के लिए,</p>
+                <p class="shayari-line">तुम्हारी हंसी हमें जान से भी प्यारी लगती है। ❤️</p>
+            </div>
+
+            <p class="unique-wish">To the girl who brings so much light, laughter, and joy into the world. May your birthday be as absolutely stunning and vibrant as you are.</p>
+            <p class="unique-wish">I wanted to make something special just for you. Wishing you a year ahead filled with endless happiness, new adventures, and dreams coming true.</p>
+            <p class="unique-wish">Keep smiling that gorgeous smile, and never lose your fiery, amazing spirit!</p>
+        </div>
+    </div>
+
+    <script>
+        const flowerColors = ['#ff9a9e', '#fbc2eb', '#a18cd1', '#ffb8b8', '#ff7675', '#fd79a8'];
+        const butterflyColors = [
+            'linear-gradient(to bottom, #ff9a9e, #fecfef)',
+            'linear-gradient(to bottom, #74b9ff, #a29bfe)',
+            'linear-gradient(to bottom, #55efc4, #81ecec)',
+            'linear-gradient(to bottom, #ffeaa7, #ff7675)'
+        ];
+
+        function openGift() {
+            const lid = document.getElementById('lid');
+            lid.style.transform = 'translateY(-120px) rotate(-20deg) scale(1.1)';
+            lid.style.opacity = '0';
+            document.querySelector('.tap-text').style.display = 'none';
+
+            // Start generating the living elements
+            setTimeout(() => {
+                spawnFlowers();
+                // Continuously spawn butterflies so they never run out
+                startContinuousButterflies();
+            }, 300);
+
+            // Switch to the main letter screen
+            setTimeout(() => {
+                document.getElementById('unboxing-page').classList.add('hidden');
+                document.getElementById('birthday-content').classList.add('active');
+            }, 1800);
+        }
+
+        function spawnFlowers() {
+            const layer = document.getElementById('animation-layer');
+            for (let i = 0; i < 22; i++) {
+                const flower = document.createElement('div');
+                flower.className = 'css-flower';
+                
+                const petalColor = flowerColors[Math.floor(Math.random() * flowerColors.length)];
+                let petalsHTML = '';
+                for(let p = 0; p < 8; p++) {
+                    const rotation = p * 45;
+                    petalsHTML += `<div class="petal" style="background: ${petalColor}; transform: translate(-50%, -100%) rotate(${rotation}deg);"></div>`;
+                }
+                flower.innerHTML = petalsHTML + `<div class="center"></div>`;
+
+                flower.style.left = `${Math.random() * 90 + 5}%`;
+                flower.style.top = `${Math.random() * 85 + 5}%`;
+                flower.style.transform = `scale(${0.4 + Math.random() * 0.7})`;
+                flower.style.animationDelay = `${Math.random() * 1.5}s`;
+
+                layer.appendChild(flower);
+            }
+        }
+
+        function startContinuousButterflies() {
+            const layer = document.getElementById('animation-layer');
+            let butterflyIndex = 0;
+
+            function createSingleButterfly() {
+                // Ensure the active user is still looking at the page layer
+                if (!layer) return;
+
+                const butterfly = document.createElement('div');
+                butterfly.className = 'css-butterfly';
+                
+                const wingGrad = butterflyColors[Math.floor(Math.random() * butterflyColors.length)];
+                butterfly.innerHTML = `
+                    <div class="wing wing-left" style="background: ${wingGrad}"></div>
+                    <div class="wing wing-right" style="background: ${wingGrad}"></div>
+                `;
+
+                // Organic start/end positions for a seamless endless flight loop
+                const side = Math.random() > 0.5 ? 'left' : 'right';
+                const startX = side === 'left' ? -50 : window.innerWidth + 50;
+                const startY = window.innerHeight * 0.3 + (Math.random() * window.innerHeight * 0.6);
+                
+                const endX = side === 'left' ? window.innerWidth + 50 : -50;
+                const endY = -100 - (Math.random() * 100);
+                
+                const duration = 6 + Math.random() * 6; // Flight time 6 to 12s
+
+                const animName = `path-${butterflyIndex++}`;
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    @keyframes ${animName} {
+                        0% { transform: translate(${startX}px, ${startY}px) scale(${0.4 + Math.random()*0.5}); }
+                        33% { transform: translate(${(startX + endX)/3}px, ${startY - 150}px) scale(${0.6 + Math.random()*0.3}); }
+                        66% { transform: translate(${2 * (startX + endX)/3}px, ${startY - 300}px) scale(${0.5 + Math.random()*0.4}); }
+                        100% { transform: translate(${endX}px, ${endY}px) scale(0.9); }
+                    }
+                `;
+                document.head.appendChild(style);
+                butterfly.style.animation = `${animName} ${duration}s linear forwards`;
+
+                layer.appendChild(butterfly);
+
+                // Clean up the DOM node after it flies off-screen to keep the code fast
+                setTimeout(() => {
+                    butterfly.remove();
+                    style.remove();
+                }, duration * 1000);
+            }
+
+            // Spawn an initial batch of butterflies right away
+            for(let i=0; i<8; i++){
+                setTimeout(createSingleButterfly, i * 600);
+            }
+
+            // Continuously spawn new ones forever every few seconds
+            setInterval(createSingleButterfly, 1500);
+        }
+    </script>
+</body>
+</html>
