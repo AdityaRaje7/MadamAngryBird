@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday, Angry Bird! 🐦</title>
-    <!-- Lottie Library for the butterfly.json animation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&display=swap');
 
@@ -13,6 +11,8 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            /* Removes the blue highlight tap box on mobile devices */
+            -webkit-tap-highlight-color: transparent; 
         }
 
         body, html {
@@ -69,7 +69,7 @@
             position: relative;
         }
 
-        /* --- Buttons --- */
+        /* --- Buttons (Fixed Focus Visibility) --- */
         .action-btn {
             background: #ff4757;
             color: white;
@@ -85,6 +85,12 @@
             margin-top: 25px;
             z-index: 30;
             position: relative;
+            outline: none; /* Keeps it clean on click */
+        }
+
+        .action-btn:focus, .action-btn:active {
+            outline: none;
+            border: none;
         }
 
         .action-btn:hover {
@@ -92,10 +98,9 @@
             box-shadow: 0 15px 25px rgba(255, 71, 87, 0.5);
         }
 
-        /* Transparent Ghost Button */
         .ghost-btn {
             background: transparent;
-            border: 2px solid #ff4757;
+            border: 2px solid #ff4757 !important;
             color: #ff4757;
             box-shadow: none;
         }
@@ -233,37 +238,34 @@
         .summary-total { font-size: 1.3rem; font-weight: 700; color: #d81b60; border-top: 2px solid #d81b60; padding-top: 10px; margin-top: 5px;}
         .invoice-header { display: flex; justify-content: space-between; font-size: 0.9rem; color: #555; margin-bottom: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px;}
 
-        /* --- Explosion Particle Animations --- */
+        /* --- Custom CSS Explosion Animations --- */
         #animation-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 15; overflow: hidden; }
-        
-        .floating-flower {
-            position: absolute;
-            left: 50%; top: 50%;
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0) rotate(0deg);
-            animation: explodeOut 6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-            will-change: transform, opacity;
-        }
 
-        .lottie-butterfly-wrapper {
-            position: absolute;
-            left: 50%; top: 50%;
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0);
-            animation: flyOut 7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-            will-change: transform, opacity;
-        }
+        /* Custom Pure CSS Butterfly */
+        .css-butterfly-wrapper { position: absolute; left: 50%; top: 50%; opacity: 0; transform: translate(-50%, -50%) scale(0); will-change: transform, opacity; }
+        .css-butterfly { position: relative; width: 60px; height: 60px; transform-style: preserve-3d; will-change: transform; }
+        .css-butterfly .wing { position: absolute; width: 35px; height: 45px; border-radius: 50% 50% 20% 50%; opacity: 0.9; box-shadow: inset 0 0 10px rgba(255,255,255,0.7), 0 2px 5px rgba(0,0,0,0.1); }
+        .css-butterfly .wing-left { transform-origin: right center; left: -8px; animation: flap-l 0.1s ease-in-out infinite alternate; }
+        .css-butterfly .wing-right { transform-origin: left center; left: 27px; border-radius: 50% 50% 50% 20%; animation: flap-r 0.1s ease-in-out infinite alternate; }
+        @keyframes flap-l { from { transform: rotateY(0deg); } to { transform: rotateY(70deg); } }
+        @keyframes flap-r { from { transform: rotateY(0deg); } to { transform: rotateY(-70deg); } }
 
+        /* Custom Pure CSS Flower */
+        .css-flower { position: absolute; left: 50%; top: 50%; opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(0deg); will-change: transform, opacity; }
+        .css-flower .petal { position: absolute; width: 18px; height: 32px; border-radius: 50%; top: 50%; left: 50%; transform-origin: top center; box-shadow: inset 0 0 6px rgba(255,255,255,0.4); }
+        .css-flower .center { position: absolute; width: 18px; height: 18px; background: #ffda79; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; box-shadow: inset 0 0 4px rgba(0,0,0,0.2); }
+
+        /* Explosion Paths */
         @keyframes explodeOut {
             0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 0; }
             15% { opacity: 1; transform: translate(-50%, -50%) scale(1.2) rotate(20deg); }
-            100% { transform: translate(calc(-50% + var(--end-x)), calc(-50% + var(--end-y))) scale(0.6) rotate(360deg); opacity: 0; }
+            100% { transform: translate(calc(-50% + var(--end-x)), calc(-50% + var(--end-y))) scale(0.8) rotate(360deg); opacity: 0; }
         }
 
         @keyframes flyOut {
             0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
             15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            100% { transform: translate(calc(-50% + var(--end-x)), calc(-50% + var(--end-y))) scale(1.5); opacity: 0; }
+            100% { transform: translate(calc(-50% + var(--end-x)), calc(-50% + var(--end-y))) scale(1.8); opacity: 0; }
         }
 
         @media (max-width: 600px) {
@@ -275,6 +277,14 @@
     </style>
 </head>
 <body>
+
+    <!-- Invisible Audio Player that loops forever -->
+    <!-- Important: make sure the file matches the exact name you upload to GitHub! (e.g. music1.mp4 or music1.mp3) -->
+    <audio id="bg-music" loop>
+        <source src="music1" type="audio/mpeg">
+        <source src="music1.mp4" type="audio/mp4">
+        <source src="music1.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="animation-layer"></div>
 
@@ -335,7 +345,7 @@
                     <div class="gift-ribbon-horizontal"></div>
                 </div>
             </div>
-            <p class="tap-text" id="tap-msg">Shake your phone to open!<br><span style="font-size: 0.8rem; color: #666;">(Or just tap it)</span></p>
+            <p class="tap-text" id="tap-msg">Shake your phone to open</p>
         </div>
     </div>
 
@@ -344,7 +354,6 @@
         <div class="glass-card" style="max-width: 700px;">
             <h2 class="highlight-title" style="font-size: clamp(2.2rem, 5vw, 3rem);">Happy Birthday, Angry Bird! 🌸</h2>
             
-            <!-- CELEBRATION IMAGE WRAPPER -->
             <div class="celebration-wrapper">
                 <div class="celebration-ring"></div>
                 <img src="image1.jpeg" alt="Angry Bird" class="hero-img-celebrate">
@@ -363,8 +372,11 @@
             <p class="special-note" style="text-align: left;">I wanted to make something special just for you. Wishing you a year ahead filled with endless happiness, new adventures, and dreams coming true.</p>
             <p class="special-note" style="text-align: left; font-weight: 600;">Keep smiling that gorgeous smile, and never lose your fiery, amazing spirit!</p>
             
-            <!-- Transparent / Ghost Next Button -->
-            <button class="action-btn ghost-btn" onclick="nextScreen(6, 7)">Wait, one more thing...</button>
+            <!-- Added small text on top and a clean "Next" button -->
+            <div style="margin-top: 30px;">
+                <p style="font-size: 0.95rem; font-weight: 600; color: #ff4757; margin-bottom: 8px;">Wait, one more thing...</p>
+                <button class="action-btn ghost-btn" onclick="nextScreen(6, 7)">Next</button>
+            </div>
         </div>
     </div>
 
@@ -431,8 +443,14 @@
     </div>
 
     <script>
-        // Screen Navigation
+        // Screen Navigation & Audio Trigger
         function nextScreen(current, next) {
+            // Trigger music on the very first button click
+            if(current === 1) {
+                const bgMusic = document.getElementById('bg-music');
+                bgMusic.play().catch(e => console.log("Audio playback requires user interaction: ", e));
+            }
+
             document.getElementById(`screen-${current}`).classList.remove('active');
             setTimeout(() => {
                 document.getElementById(`screen-${next}`).classList.add('active');
@@ -485,7 +503,7 @@
             lastX = acc.x; lastY = acc.y; lastZ = acc.z;
         }
 
-        // Unboxing & MASSIVE EXPLOSION Logic
+        // Unboxing & CSS Custom EXPLOSION Logic
         function openGift() {
             if(isOpened) return;
             isOpened = true;
@@ -497,31 +515,50 @@
             lid.style.opacity = '0';
             document.getElementById('tap-msg').style.display = 'none';
 
-            // Explode from the box immediately!
+            // Explode custom CSS particles from the box immediately
             setTimeout(() => {
-                explodeFlowers();
-                explodeButterflies();
+                explodeCustomFlowers();
+                explodeCustomButterflies();
             }, 300);
 
             setTimeout(() => { nextScreen(5, 6); }, 2200);
         }
 
-        function explodeFlowers() {
+        const flowerColors = ['#ff9a9e', '#fbc2eb', '#a18cd1', '#ffb8b8', '#ff7675', '#fd79a8'];
+        const butterflyColors = [
+            'linear-gradient(to bottom, #ff9a9e, #fecfef)',
+            'linear-gradient(to bottom, #74b9ff, #a29bfe)',
+            'linear-gradient(to bottom, #55efc4, #81ecec)',
+            'linear-gradient(to bottom, #ffeaa7, #ff7675)'
+        ];
+
+        // 1. PURE CSS FLOWERS (Replaces images)
+        function explodeCustomFlowers() {
             const layer = document.getElementById('animation-layer');
             for (let i = 0; i < 35; i++) {
                 setTimeout(() => {
-                    const flower = document.createElement('img');
-                    flower.src = 'flowers.png';
-                    flower.className = 'floating-flower';
+                    const flower = document.createElement('div');
+                    flower.className = 'css-flower';
+                    flower.style.animation = `explodeOut 6s cubic-bezier(0.25, 1, 0.5, 1) forwards`;
                     
+                    const petalColor = flowerColors[Math.floor(Math.random() * flowerColors.length)];
+                    let petalsHTML = '';
+                    for(let p = 0; p < 8; p++) {
+                        const rotation = p * 45;
+                        petalsHTML += `<div class="petal" style="background: ${petalColor}; transform: translate(-50%, -100%) rotate(${rotation}deg);"></div>`;
+                    }
+                    flower.innerHTML = petalsHTML + `<div class="center"></div>`;
+                    
+                    // Explode outward in 360 spread
                     const endX = (Math.random() - 0.5) * 150; 
                     const endY = (Math.random() - 1) * 120;   
                     
                     flower.style.setProperty('--end-x', `${endX}vw`);
                     flower.style.setProperty('--end-y', `${endY}vh`);
                     
-                    // EVEN BIGGER FLOWERS (between 40px and 100px)
-                    flower.style.width = `${Math.random() * 60 + 40}px`;
+                    // Scaling them nicely
+                    const scaleFactor = Math.random() * 0.8 + 0.6;
+                    flower.style.transform = `translate(-50%, -50%) scale(${scaleFactor})`;
 
                     layer.appendChild(flower);
                     setTimeout(() => flower.remove(), 6000);
@@ -529,38 +566,37 @@
             }
         }
 
-        function explodeButterflies() {
+        // 2. PURE CSS BUTTERFLIES (Replaces Lottie)
+        function explodeCustomButterflies() {
             const layer = document.getElementById('animation-layer');
             for (let i = 0; i < 15; i++) {
                 setTimeout(() => {
                     if (!layer) return;
                     const wrapper = document.createElement('div');
-                    wrapper.className = 'lottie-butterfly-wrapper';
+                    wrapper.className = 'css-butterfly-wrapper';
+                    wrapper.style.animation = `flyOut 7s cubic-bezier(0.25, 1, 0.5, 1) forwards`;
                     
                     const endX = (Math.random() - 0.5) * 200; 
                     const endY = (Math.random() - 1.2) * 150; 
                     
                     wrapper.style.setProperty('--end-x', `${endX}vw`);
                     wrapper.style.setProperty('--end-y', `${endY}vh`);
-                    
-                    const inner = document.createElement('div');
-                    
-                    // EVEN BIGGER BUTTERFLIES (200px)
-                    inner.style.width = '200px';
-                    inner.style.height = '200px';
-                    
-                    if(endX < 0) inner.style.transform = 'scaleX(-1)'; 
-                    
-                    wrapper.appendChild(inner);
-                    layer.appendChild(wrapper);
 
-                    lottie.loadAnimation({
-                        container: inner,
-                        renderer: 'svg',
-                        loop: true,
-                        autoplay: true,
-                        path: 'butterfly.json' 
-                    });
+                    const butterfly = document.createElement('div');
+                    butterfly.className = 'css-butterfly';
+                    
+                    // Face the direction it is flying
+                    if(endX < 0) butterfly.style.transform = 'scaleX(-1) scale(1.5)';
+                    else butterfly.style.transform = 'scale(1.5)';
+                    
+                    const wingGrad = butterflyColors[Math.floor(Math.random() * butterflyColors.length)];
+                    butterfly.innerHTML = `
+                        <div class="wing wing-left" style="background: ${wingGrad}"></div>
+                        <div class="wing wing-right" style="background: ${wingGrad}"></div>
+                    `;
+                    
+                    wrapper.appendChild(butterfly);
+                    layer.appendChild(wrapper);
 
                     setTimeout(() => wrapper.remove(), 7000);
                 }, i * 150); 
