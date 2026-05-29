@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday, Angry Bird! 🐦</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&display=swap');
 
@@ -22,6 +23,7 @@
             animation: gradientBG 15s ease infinite;
             color: #333;
             overflow-x: hidden;
+            overflow-y: auto;
         }
 
         @keyframes gradientBG {
@@ -32,13 +34,13 @@
 
         /* --- Screen Navigation Layout --- */
         .screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute;
+            top: 0; left: 0; width: 100%; min-height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 40px 20px;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.8s ease, visibility 0.8s ease, transform 0.8s ease;
@@ -64,6 +66,7 @@
             width: 100%;
             text-align: center;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
         /* --- Buttons --- */
@@ -80,6 +83,8 @@
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
             margin-top: 25px;
+            z-index: 30;
+            position: relative;
         }
 
         .action-btn:hover {
@@ -110,6 +115,7 @@
             margin-bottom: 20px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.15);
             border: 4px solid rgba(255, 255, 255, 0.8);
+            object-fit: cover;
         }
 
         /* --- Timer Display --- */
@@ -141,7 +147,7 @@
             color: #666;
         }
 
-        /* --- Gift Box Styles --- */
+        /* --- Gift Box Styles & Shake Animation --- */
         .gift-container {
             position: relative;
             width: 180px;
@@ -150,6 +156,25 @@
             cursor: pointer;
             transition: transform 0.3s;
         }
+        
+        .shaking {
+            animation: shakeHard 0.5s ease-in-out infinite;
+        }
+
+        @keyframes shakeHard {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
         .gift-box { width: 100%; height: 100%; background: #ff4757; border-radius: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); position: relative; }
         .gift-ribbon-vertical { position: absolute; width: 25px; height: 100%; background: #f1f2f6; left: 50%; transform: translateX(-50%); }
         .gift-ribbon-horizontal { position: absolute; height: 25px; width: 100%; background: #f1f2f6; top: 50%; transform: translateY(-50%); }
@@ -169,19 +194,42 @@
         }
         .shayari-line { font-size: 1.2rem; line-height: 1.8; color: #2c3e50; font-weight: 500; }
 
-        /* --- CSS Animations (Flowers/Butterflies) --- */
+        /* --- Custom Particle Animations (Images & Lottie) --- */
         #animation-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 15; overflow: hidden; }
-        .css-butterfly { position: absolute; width: 40px; height: 40px; transform-style: preserve-3d; will-change: transform; }
-        .css-butterfly .wing { position: absolute; width: 22px; height: 32px; border-radius: 50% 50% 20% 50%; opacity: 0.85; box-shadow: inset 0 0 8px rgba(255,255,255,0.6), 0 2px 4px rgba(0,0,0,0.05); }
-        .css-butterfly .wing-left { transform-origin: right center; left: -4px; animation: flap-l 0.12s ease-in-out infinite alternate; }
-        .css-butterfly .wing-right { transform-origin: left center; left: 18px; border-radius: 50% 50% 50% 20%; animation: flap-r 0.12s ease-in-out infinite alternate; }
-        @keyframes flap-l { from { transform: rotateY(0deg); } to { transform: rotateY(75deg); } }
-        @keyframes flap-r { from { transform: rotateY(0deg); } to { transform: rotateY(-75deg); } }
+        
+        .floating-flower {
+            position: absolute;
+            width: 60px; /* Adjust based on your flowers.png size */
+            height: auto;
+            opacity: 0;
+            transform: scale(0) rotate(0deg);
+            animation: floatUpAndSpin 8s ease-in forwards;
+            will-change: transform, opacity;
+        }
 
-        .css-flower { position: absolute; width: 50px; height: 50px; transform: scale(0); animation: bloom 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; will-change: transform, opacity; }
-        .css-flower .petal { position: absolute; width: 14px; height: 24px; border-radius: 50%; top: 50%; left: 50%; transform-origin: top center; box-shadow: inset 0 0 5px rgba(255,255,255,0.3); }
-        .css-flower .center { position: absolute; width: 14px; height: 14px; background: #ffda79; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; }
-        @keyframes bloom { 0% { transform: scale(0) rotate(0deg); opacity: 0; } 100% { transform: scale(1) rotate(360deg); opacity: 0.85; } }
+        .lottie-butterfly {
+            position: absolute;
+            width: 80px; /* Size of the butterfly */
+            height: 80px;
+            opacity: 0;
+            animation: flyAcross 10s linear forwards;
+            will-change: transform;
+        }
+
+        @keyframes floatUpAndSpin {
+            0% { transform: translateY(0) scale(0) rotate(0deg); opacity: 0; }
+            20% { transform: translateY(-50px) scale(1) rotate(45deg); opacity: 1; }
+            80% { transform: translateY(-300px) scale(1) rotate(180deg); opacity: 1; }
+            100% { transform: translateY(-400px) scale(0.5) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes flyAcross {
+            0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+            10% { opacity: 1; }
+            50% { transform: translate(40vw, -30vh) scale(1); }
+            90% { opacity: 1; }
+            100% { transform: translate(80vw, -80vh) scale(1.5); opacity: 0; }
+        }
 
         @media (max-width: 600px) {
             .timer-grid { grid-template-columns: repeat(2, 1fr); }
@@ -191,10 +239,8 @@
 </head>
 <body>
 
-    <!-- Animation Layer (Always Present, Used Later) -->
     <div id="animation-layer"></div>
 
-    <!-- Step 1: Intro -->
     <div id="screen-1" class="screen active">
         <div class="glass-card">
             <h1 class="highlight-title">Hey there...</h1>
@@ -203,7 +249,6 @@
         </div>
     </div>
 
-    <!-- Step 2: Birth Date & Image -->
     <div id="screen-2" class="screen">
         <div class="glass-card">
             <img src="1_2.jpeg" alt="Beautiful memory" class="hero-img">
@@ -213,7 +258,6 @@
         </div>
     </div>
 
-    <!-- Step 3: Birth Year -->
     <div id="screen-3" class="screen">
         <div class="glass-card">
             <h2 class="highlight-title" style="font-size: 5rem;">2001</h2>
@@ -222,7 +266,6 @@
         </div>
     </div>
 
-    <!-- Step 4: Live Timer -->
     <div id="screen-4" class="screen">
         <div class="glass-card">
             <h2 class="highlight-title" style="font-size: 2.5rem;">Time spent being amazing...</h2>
@@ -237,29 +280,29 @@
                 <div class="time-box"><span class="time-val" id="t-secs">0</span><span class="time-label">Secs</span></div>
             </div>
 
-            <button class="action-btn" onclick="nextScreen(4, 5)">I have a gift for you...</button>
+            <button class="action-btn" onclick="initiateGiftScreen()">I have a gift for you...</button>
         </div>
     </div>
 
-    <!-- Step 5: Gift Box -->
     <div id="screen-5" class="screen">
         <div class="glass-card" style="background: transparent; border: none; box-shadow: none;">
-            <div class="gift-container" onclick="openGift()">
+            <div class="gift-container" id="gift-box" onclick="openGift()">
                 <div class="gift-lid" id="lid"></div>
                 <div class="gift-box">
                     <div class="gift-ribbon-vertical"></div>
                     <div class="gift-ribbon-horizontal"></div>
                 </div>
             </div>
-            <p class="tap-text" id="tap-msg">Tap the box to open!</p>
+            <p class="tap-text" id="tap-msg">Shake your phone to open!<br><span style="font-size: 0.8rem; color: #666;">(Or just tap it)</span></p>
         </div>
     </div>
 
-    <!-- Step 6: Final Letter & Shayari -->
     <div id="screen-6" class="screen">
         <div class="glass-card" style="max-width: 700px;">
             <h2 class="highlight-title" style="font-size: clamp(2rem, 5vw, 3rem);">Happy Birthday, Angry Bird! 🌸</h2>
             
+            <img src="image1.jpeg" alt="Angry Bird" class="hero-img" style="border-radius: 50%; max-width: 200px; height: 200px; border: 5px solid #ff4757; margin-bottom: 25px;">
+
             <div class="shayari-box">
                 <p class="shayari-line">नाराज़गी तुम्हारी चेहरे पर बड़ी प्यारी लगती है,</p>
                 <p class="shayari-line">गुस्से में तुम और भी न्यारी लगती हो।</p>
@@ -279,36 +322,29 @@
             document.getElementById(`screen-${current}`).classList.remove('active');
             setTimeout(() => {
                 document.getElementById(`screen-${next}`).classList.add('active');
-            }, 600); // Wait for fade out before fading in
+            }, 600);
         }
 
-        // --- Live Timer Logic (June 4, 2001) ---
+        // --- Live Timer Logic ---
         const birthDate = new Date('2001-06-04T00:00:00');
 
         function updateTimer() {
             const now = new Date();
-            
             let years = now.getFullYear() - birthDate.getFullYear();
             let months = now.getMonth() - birthDate.getMonth();
             let days = now.getDate() - birthDate.getDate();
             
             if (days < 0) {
                 months--;
-                // Get days in the previous month
                 const lastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
                 days += lastMonth.getDate();
             }
-            if (months < 0) {
-                years--;
-                months += 12;
-            }
+            if (months < 0) { years--; months += 12; }
 
             let hours = now.getHours() - birthDate.getHours();
             if (hours < 0) { hours += 24; days--; }
-            
             let mins = now.getMinutes() - birthDate.getMinutes();
             if (mins < 0) { mins += 60; hours--; }
-            
             let secs = now.getSeconds() - birthDate.getSeconds();
             if (secs < 0) { secs += 60; mins--; }
 
@@ -319,105 +355,135 @@
             document.getElementById('t-mins').innerText = mins;
             document.getElementById('t-secs').innerText = secs;
         }
-
-        // Start the timer immediately and update every second
         updateTimer();
         setInterval(updateTimer, 1000);
 
+        // --- SHAKE SENSOR LOGIC ---
+        let isOpened = false;
+        let lastX = 0, lastY = 0, lastZ = 0;
+        const shakeThreshold = 15; // Lower number = more sensitive
 
-        // --- Gift Unboxing & Animation Logic ---
-        const flowerColors = ['#ff9a9e', '#fbc2eb', '#a18cd1', '#ffb8b8', '#ff7675', '#fd79a8'];
-        const butterflyColors = [
-            'linear-gradient(to bottom, #ff9a9e, #fecfef)',
-            'linear-gradient(to bottom, #74b9ff, #a29bfe)',
-            'linear-gradient(to bottom, #55efc4, #81ecec)',
-            'linear-gradient(to bottom, #ffeaa7, #ff7675)'
-        ];
+        function initiateGiftScreen() {
+            // iOS 13+ requires explicit permission for DeviceMotion requested by a user click
+            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+                DeviceMotionEvent.requestPermission()
+                    .then(response => {
+                        if (response == 'granted') {
+                            window.addEventListener('devicemotion', handleMotion);
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                // Non-iOS devices
+                window.addEventListener('devicemotion', handleMotion);
+            }
+            nextScreen(4, 5);
+        }
 
+        function handleMotion(e) {
+            if(isOpened) return;
+            let acc = e.accelerationIncludingGravity;
+            if(!acc) return;
+            
+            let deltaX = Math.abs(lastX - acc.x);
+            let deltaY = Math.abs(lastY - acc.y);
+            let deltaZ = Math.abs(lastZ - acc.z);
+
+            // If the user shakes the phone hard enough
+            if (deltaX + deltaY + deltaZ > shakeThreshold) {
+                document.getElementById('gift-box').classList.add('shaking');
+                setTimeout(() => {
+                    openGift();
+                }, 800); // Wait for shake animation to look cool, then open
+            }
+            
+            lastX = acc.x; lastY = acc.y; lastZ = acc.z;
+        }
+
+        // --- UNBOXING & ASSET LOGIC ---
         function openGift() {
+            if(isOpened) return;
+            isOpened = true;
+            window.removeEventListener('devicemotion', handleMotion);
+            
+            document.getElementById('gift-box').classList.remove('shaking');
+            
             const lid = document.getElementById('lid');
             lid.style.transform = 'translateY(-120px) rotate(-20deg) scale(1.1)';
             lid.style.opacity = '0';
             document.getElementById('tap-msg').style.display = 'none';
 
+            // Spawn image files and JSON files
             setTimeout(() => {
-                spawnFlowers();
-                startContinuousButterflies();
+                spawnImageFlowers();
+                startJSONButterflies();
             }, 300);
 
             setTimeout(() => {
                 nextScreen(5, 6);
-            }, 1800);
+            }, 2000);
         }
 
-        function spawnFlowers() {
+        function spawnImageFlowers() {
             const layer = document.getElementById('animation-layer');
-            for (let i = 0; i < 22; i++) {
-                const flower = document.createElement('div');
-                flower.className = 'css-flower';
+            for (let i = 0; i < 20; i++) {
+                const flower = document.createElement('img');
+                // USING THE PROVIDED IMAGE ASSET
+                flower.src = 'flowers.png';
+                flower.className = 'floating-flower';
                 
-                const petalColor = flowerColors[Math.floor(Math.random() * flowerColors.length)];
-                let petalsHTML = '';
-                for(let p = 0; p < 8; p++) {
-                    const rotation = p * 45;
-                    petalsHTML += `<div class="petal" style="background: ${petalColor}; transform: translate(-50%, -100%) rotate(${rotation}deg);"></div>`;
-                }
-                flower.innerHTML = petalsHTML + `<div class="center"></div>`;
-
-                flower.style.left = `${Math.random() * 90 + 5}%`;
-                flower.style.top = `${Math.random() * 85 + 5}%`;
-                flower.style.transform = `scale(${0.4 + Math.random() * 0.7})`;
-                flower.style.animationDelay = `${Math.random() * 1.5}s`;
+                // Random starting positions near the center/bottom
+                flower.style.left = `${Math.random() * 80 + 10}%`;
+                flower.style.top = `${Math.random() * 50 + 50}%`;
+                
+                // Random delays and sizes
+                flower.style.width = `${Math.random() * 40 + 30}px`;
+                flower.style.animationDelay = `${Math.random() * 2}s`;
 
                 layer.appendChild(flower);
+                
+                // Remove from memory after animation finishes
+                setTimeout(() => flower.remove(), 10000);
             }
         }
 
-        function startContinuousButterflies() {
+        function startJSONButterflies() {
             const layer = document.getElementById('animation-layer');
-            let butterflyIndex = 0;
-
-            function createSingleButterfly() {
+            
+            function createLottieButterfly() {
                 if (!layer) return;
-                const butterfly = document.createElement('div');
-                butterfly.className = 'css-butterfly';
+                const containerDiv = document.createElement('div');
+                containerDiv.className = 'lottie-butterfly';
                 
-                const wingGrad = butterflyColors[Math.floor(Math.random() * butterflyColors.length)];
-                butterfly.innerHTML = `
-                    <div class="wing wing-left" style="background: ${wingGrad}"></div>
-                    <div class="wing wing-right" style="background: ${wingGrad}"></div>
-                `;
+                // Random starting positions (edges of screen)
+                const startX = Math.random() > 0.5 ? -10 : 110; 
+                const startY = Math.random() * 80 + 10;
+                
+                containerDiv.style.left = `${startX}vw`;
+                containerDiv.style.top = `${startY}vh`;
+                
+                // Flip butterfly if flying from right to left
+                if(startX === 110) { containerDiv.style.transform = 'scaleX(-1)'; }
 
-                const side = Math.random() > 0.5 ? 'left' : 'right';
-                const startX = side === 'left' ? -50 : window.innerWidth + 50;
-                const startY = window.innerHeight * 0.3 + (Math.random() * window.innerHeight * 0.6);
-                const endX = side === 'left' ? window.innerWidth + 50 : -50;
-                const endY = -100 - (Math.random() * 100);
-                const duration = 6 + Math.random() * 6; 
+                layer.appendChild(containerDiv);
 
-                const animName = `path-${butterflyIndex++}`;
-                const style = document.createElement('style');
-                style.innerHTML = `
-                    @keyframes ${animName} {
-                        0% { transform: translate(${startX}px, ${startY}px) scale(${0.4 + Math.random()*0.5}); }
-                        33% { transform: translate(${(startX + endX)/3}px, ${startY - 150}px) scale(${0.6 + Math.random()*0.3}); }
-                        66% { transform: translate(${2 * (startX + endX)/3}px, ${startY - 300}px) scale(${0.5 + Math.random()*0.4}); }
-                        100% { transform: translate(${endX}px, ${endY}px) scale(0.9); }
-                    }
-                `;
-                document.head.appendChild(style);
-                butterfly.style.animation = `${animName} ${duration}s linear forwards`;
-
-                layer.appendChild(butterfly);
+                // USING THE PROVIDED JSON ASSET VIA LOTTIE
+                lottie.loadAnimation({
+                    container: containerDiv,
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: 'butterfly.json' // Points directly to the uploaded file
+                });
 
                 setTimeout(() => {
-                    butterfly.remove();
-                    style.remove();
-                }, duration * 1000);
+                    containerDiv.remove();
+                }, 10000);
             }
 
-            for(let i=0; i<8; i++){ setTimeout(createSingleButterfly, i * 600); }
-            setInterval(createSingleButterfly, 1500);
+            // Spawn a few immediately, then loop
+            for(let i=0; i<5; i++){ setTimeout(createLottieButterfly, i * 500); }
+            setInterval(createLottieButterfly, 2500);
         }
     </script>
 </body>
