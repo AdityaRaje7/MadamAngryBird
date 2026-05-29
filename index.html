@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday, Angry Bird! 🐦</title>
-    <!-- Lottie Library for the butterfly.json animation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&display=swap');
@@ -166,7 +165,6 @@
             z-index: 2;
             box-shadow: 0 10px 30px rgba(255, 71, 87, 0.4);
         }
-        /* The glowing, spinning ring behind her photo */
         .celebration-ring {
             position: absolute;
             top: -15px; left: -15px; right: -15px; bottom: -15px;
@@ -178,7 +176,6 @@
             opacity: 0.9;
         }
         @keyframes spinRing { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        /* Floating party emojis around the edges */
         .party-popper {
             position: absolute;
             font-size: 2.5rem;
@@ -203,7 +200,7 @@
         }
         .shayari-line { font-size: 1.2rem; line-height: 1.8; color: #2c3e50; font-weight: 500; }
 
-        /* --- Explosion Particle Animations (From the center outward) --- */
+        /* --- Explosion Particle Animations --- */
         #animation-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 15; overflow: hidden; }
         
         .floating-flower {
@@ -224,7 +221,6 @@
             will-change: transform, opacity;
         }
 
-        /* Dynamically use variables to shoot in all directions */
         @keyframes explodeOut {
             0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 0; }
             15% { opacity: 1; transform: translate(-50%, -50%) scale(1.2) rotate(20deg); }
@@ -248,7 +244,6 @@
 
     <div id="animation-layer"></div>
 
-    <!-- Step 1: Intro -->
     <div id="screen-1" class="screen active">
         <div class="glass-card">
             <h1 class="highlight-title">Hey there...</h1>
@@ -257,7 +252,6 @@
         </div>
     </div>
 
-    <!-- Step 2: Birth Date -->
     <div id="screen-2" class="screen">
         <div class="glass-card">
             <img src="1_2.jpeg" alt="Beautiful memory" class="hero-img">
@@ -267,7 +261,6 @@
         </div>
     </div>
 
-    <!-- Step 3: Birth Year -->
     <div id="screen-3" class="screen">
         <div class="glass-card">
             <h2 class="highlight-title" style="font-size: 5rem;">2001</h2>
@@ -276,7 +269,6 @@
         </div>
     </div>
 
-    <!-- Step 4: Live Timer -->
     <div id="screen-4" class="screen">
         <div class="glass-card">
             <h2 class="highlight-title" style="font-size: 2.5rem;">Time spent being amazing...</h2>
@@ -295,9 +287,8 @@
         </div>
     </div>
 
-    <!-- Step 5: Gift Box -->
     <div id="screen-5" class="screen">
-        <div class="glass-card" style="background: transparent; border: none; box-shadow: none;">
+        <div class="glass-card" style="background: transparent; border: none; box-shadow: none; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px);">
             <div class="gift-container" id="gift-box" onclick="openGift()">
                 <div class="gift-lid" id="lid"></div>
                 <div class="gift-box">
@@ -309,12 +300,10 @@
         </div>
     </div>
 
-    <!-- Step 6: Final Letter & Celebration Edge Image -->
     <div id="screen-6" class="screen">
         <div class="glass-card" style="max-width: 700px;">
             <h2 class="highlight-title" style="font-size: clamp(2.2rem, 5vw, 3rem);">Happy Birthday, Angry Bird! 🌸</h2>
             
-            <!-- CELEBRATION IMAGE WRAPPER -->
             <div class="celebration-wrapper">
                 <div class="celebration-ring"></div>
                 <img src="image1.jpeg" alt="Angry Bird" class="hero-img-celebrate">
@@ -411,7 +400,6 @@
             setTimeout(() => { nextScreen(5, 6); }, 2200);
         }
 
-        // 1. Flowers bursting OUT from the center
         function explodeFlowers() {
             const layer = document.getElementById('animation-layer');
             for (let i = 0; i < 35; i++) {
@@ -420,9 +408,8 @@
                     flower.src = 'flowers.png';
                     flower.className = 'floating-flower';
                     
-                    // Math to push them outward in a 360 degree radius, primarily upwards
-                    const endX = (Math.random() - 0.5) * 150; // Spread wide left and right
-                    const endY = (Math.random() - 1) * 120;   // Shoot upwards
+                    const endX = (Math.random() - 0.5) * 150; 
+                    const endY = (Math.random() - 1) * 120;   
                     
                     flower.style.setProperty('--end-x', `${endX}vw`);
                     flower.style.setProperty('--end-y', `${endY}vh`);
@@ -430,11 +417,10 @@
 
                     layer.appendChild(flower);
                     setTimeout(() => flower.remove(), 6000);
-                }, i * 50); // Shoot out rapidly one after another
+                }, i * 50); 
             }
         }
 
-        // 2. Butterflies flying OUT from the center
         function explodeButterflies() {
             const layer = document.getElementById('animation-layer');
             for (let i = 0; i < 15; i++) {
@@ -443,7 +429,6 @@
                     const wrapper = document.createElement('div');
                     wrapper.className = 'lottie-butterfly-wrapper';
                     
-                    // Push them far away from the box
                     const endX = (Math.random() - 0.5) * 200; 
                     const endY = (Math.random() - 1.2) * 150; 
                     
@@ -451,9 +436,11 @@
                     wrapper.style.setProperty('--end-y', `${endY}vh`);
                     
                     const inner = document.createElement('div');
-                    inner.style.width = '80px';
-                    inner.style.height = '80px';
-                    // Make them face the direction they are flying
+                    
+                    // INCREASED BUTTERFLY SIZE HERE (from 80px to 150px)
+                    inner.style.width = '150px';
+                    inner.style.height = '150px';
+                    
                     if(endX < 0) inner.style.transform = 'scaleX(-1)'; 
                     
                     wrapper.appendChild(inner);
@@ -468,7 +455,7 @@
                     });
 
                     setTimeout(() => wrapper.remove(), 7000);
-                }, i * 150); // Burst sequence
+                }, i * 150); 
             }
         }
     </script>
