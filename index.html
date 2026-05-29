@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday, Angry Bird! 🐦</title>
+    <!-- Lottie Library for the butterfly.json animation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&display=swap');
@@ -68,6 +69,7 @@
             position: relative;
         }
 
+        /* --- Buttons --- */
         .action-btn {
             background: #ff4757;
             color: white;
@@ -88,6 +90,20 @@
         .action-btn:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 25px rgba(255, 71, 87, 0.5);
+        }
+
+        /* Transparent Ghost Button */
+        .ghost-btn {
+            background: transparent;
+            border: 2px solid #ff4757;
+            color: #ff4757;
+            box-shadow: none;
+        }
+
+        .ghost-btn:hover {
+            background: #ff4757;
+            color: white;
+            box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);
         }
 
         .highlight-title {
@@ -200,6 +216,23 @@
         }
         .shayari-line { font-size: 1.2rem; line-height: 1.8; color: #2c3e50; font-weight: 500; }
 
+        /* --- Invoice Styles --- */
+        .invoice-box {
+            background: rgba(255, 255, 255, 0.65);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            text-align: left;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+        .plan-title { font-weight: 600; color: #d81b60; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: center;}
+        .plan-price { font-weight: 700; color: #333; font-size: 1.1rem;}
+        .plan-desc { font-size: 0.9rem; color: #444; margin-top: 5px; line-height: 1.5; }
+        .invoice-summary { border-top: 2px dashed rgba(0,0,0,0.2); padding-top: 15px; margin-top: 20px;}
+        .summary-line { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 1.05rem; color: #333; font-weight: 500;}
+        .summary-total { font-size: 1.3rem; font-weight: 700; color: #d81b60; border-top: 2px solid #d81b60; padding-top: 10px; margin-top: 5px;}
+        .invoice-header { display: flex; justify-content: space-between; font-size: 0.9rem; color: #555; margin-bottom: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px;}
+
         /* --- Explosion Particle Animations --- */
         #animation-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 15; overflow: hidden; }
         
@@ -237,6 +270,7 @@
             .timer-grid { grid-template-columns: repeat(2, 1fr); }
             .time-val { font-size: 1.5rem; }
             .hero-img-celebrate { width: 180px; height: 180px; }
+            .invoice-header { flex-direction: column; gap: 5px; text-align: center;}
         }
     </style>
 </head>
@@ -244,6 +278,7 @@
 
     <div id="animation-layer"></div>
 
+    <!-- Step 1: Intro -->
     <div id="screen-1" class="screen active">
         <div class="glass-card">
             <h1 class="highlight-title">Hey there...</h1>
@@ -252,6 +287,7 @@
         </div>
     </div>
 
+    <!-- Step 2: Birth Date -->
     <div id="screen-2" class="screen">
         <div class="glass-card">
             <img src="1_2.jpeg" alt="Beautiful memory" class="hero-img">
@@ -261,6 +297,7 @@
         </div>
     </div>
 
+    <!-- Step 3: Birth Year -->
     <div id="screen-3" class="screen">
         <div class="glass-card">
             <h2 class="highlight-title" style="font-size: 5rem;">2001</h2>
@@ -269,6 +306,7 @@
         </div>
     </div>
 
+    <!-- Step 4: Live Timer -->
     <div id="screen-4" class="screen">
         <div class="glass-card">
             <h2 class="highlight-title" style="font-size: 2.5rem;">Time spent being amazing...</h2>
@@ -287,6 +325,7 @@
         </div>
     </div>
 
+    <!-- Step 5: Gift Box (Blur set to 0%) -->
     <div id="screen-5" class="screen">
         <div class="glass-card" style="background: transparent; border: none; box-shadow: none; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px);">
             <div class="gift-container" id="gift-box" onclick="openGift()">
@@ -300,10 +339,12 @@
         </div>
     </div>
 
+    <!-- Step 6: Final Letter & Celebration Edge Image -->
     <div id="screen-6" class="screen">
         <div class="glass-card" style="max-width: 700px;">
             <h2 class="highlight-title" style="font-size: clamp(2.2rem, 5vw, 3rem);">Happy Birthday, Angry Bird! 🌸</h2>
             
+            <!-- CELEBRATION IMAGE WRAPPER -->
             <div class="celebration-wrapper">
                 <div class="celebration-ring"></div>
                 <img src="image1.jpeg" alt="Angry Bird" class="hero-img-celebrate">
@@ -321,6 +362,71 @@
             <p class="special-note" style="text-align: left;">To the girl who brings so much light, laughter, and joy into the world. May your birthday be as absolutely stunning and vibrant as you are.</p>
             <p class="special-note" style="text-align: left;">I wanted to make something special just for you. Wishing you a year ahead filled with endless happiness, new adventures, and dreams coming true.</p>
             <p class="special-note" style="text-align: left; font-weight: 600;">Keep smiling that gorgeous smile, and never lose your fiery, amazing spirit!</p>
+            
+            <!-- Transparent / Ghost Next Button -->
+            <button class="action-btn ghost-btn" onclick="nextScreen(6, 7)">Wait, one more thing...</button>
+        </div>
+    </div>
+
+    <!-- Step 7: The Friendship Invoice -->
+    <div id="screen-7" class="screen">
+        <div class="glass-card" style="max-width: 650px;">
+            <h2 class="highlight-title" style="font-size: clamp(2rem, 5vw, 2.5rem); margin-bottom: 5px;">Friendship as a Service (FaaS)</h2>
+            
+            <div class="invoice-header">
+                <span><strong>Invoice #:</strong> 04062001</span>
+                <span><strong>Billed To:</strong> The Angry Bird</span>
+            </div>
+
+            <!-- Basic Plan -->
+            <div class="invoice-box">
+                <div class="plan-title">
+                    <span>1. The Basic Plan</span>
+                    <span class="plan-price">₹199 / mo</span>
+                </div>
+                <p class="plan-desc">"The Occasional Texter." Includes replying to memes within 3 to 5 business days. Allows a maximum of 2 minor tantrums per month.</p>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="invoice-box">
+                <div class="plan-title">
+                    <span>2. The Pro Plan</span>
+                    <span class="plan-price">₹499 / mo</span>
+                </div>
+                <p class="plan-desc">"The Solid Bestie." Includes instant replies (conditions apply), taking your side in arguments even when you are clearly wrong, and unlimited sharing of high-quality gossip.</p>
+            </div>
+
+            <!-- Premium Plan -->
+            <div class="invoice-box" style="border: 2px solid #ff4757; background: rgba(255, 255, 255, 0.85);">
+                <div class="plan-title">
+                    <span>3. Unlimited Premium Pack <span style="font-size: 0.8rem; background: #ff4757; color: white; padding: 2px 8px; border-radius: 10px; margin-left: 10px;">SELECTED</span></span>
+                    <span class="plan-price">₹1299 / mo</span>
+                </div>
+                <p class="plan-desc">"The Angry Bird Tolerance Pack." Includes 24/7 VIP venting support, extreme patience during sudden anger spikes, and mandatory hype-man duties on all your Instagram photos.</p>
+            </div>
+
+            <div class="invoice-summary">
+                <div class="summary-line">
+                    <span>Subtotal:</span>
+                    <span>₹1299.00</span>
+                </div>
+                <div class="summary-line">
+                    <span>GST (Gossip & Secrets Tax - 18%):</span>
+                    <span>₹233.82</span>
+                </div>
+                <div class="summary-line" style="color: #27ae60;">
+                    <span>Loyalty Discount (Because you're awesome):</span>
+                    <span>-₹1532.82</span>
+                </div>
+                <div class="summary-line summary-total">
+                    <span>Total Amount Due:</span>
+                    <span>₹0.00</span>
+                </div>
+            </div>
+
+            <p style="font-size: 0.85rem; color: #666; margin-top: 20px; font-style: italic;">
+                Payment Terms: Late payments will result in a penalty of one large pizza to be delivered to the developer. Please pay with a smile.
+            </p>
         </div>
     </div>
 
@@ -379,7 +485,7 @@
             lastX = acc.x; lastY = acc.y; lastZ = acc.z;
         }
 
-        // Unboxing & EXPLOSION Logic
+        // Unboxing & MASSIVE EXPLOSION Logic
         function openGift() {
             if(isOpened) return;
             isOpened = true;
@@ -413,7 +519,9 @@
                     
                     flower.style.setProperty('--end-x', `${endX}vw`);
                     flower.style.setProperty('--end-y', `${endY}vh`);
-                    flower.style.width = `${Math.random() * 40 + 20}px`;
+                    
+                    // EVEN BIGGER FLOWERS (between 40px and 100px)
+                    flower.style.width = `${Math.random() * 60 + 40}px`;
 
                     layer.appendChild(flower);
                     setTimeout(() => flower.remove(), 6000);
@@ -437,9 +545,9 @@
                     
                     const inner = document.createElement('div');
                     
-                    // INCREASED BUTTERFLY SIZE HERE (from 80px to 150px)
-                    inner.style.width = '150px';
-                    inner.style.height = '150px';
+                    // EVEN BIGGER BUTTERFLIES (200px)
+                    inner.style.width = '200px';
+                    inner.style.height = '200px';
                     
                     if(endX < 0) inner.style.transform = 'scaleX(-1)'; 
                     
